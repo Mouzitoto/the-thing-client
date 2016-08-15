@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: darkgreen;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="150.0" fitWidth="86.0" layoutX="514.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="150.0" fitWidth="86.0" layoutX="629.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="150.0" fitWidth="86.0" layoutX="460.0" layoutY="274.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="150.0" fitWidth="86.0" layoutX="606.0" layoutY="274.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="486.0" layoutY="250.0" text="Сброс" />
+      <Label layoutX="629.0" layoutY="250.0" text="Колода" />
    </children>
 </Pane>

@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.controllers.TabletopController;
+import sample.game.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 public class Main extends Application {
     public static Player player = new Player();
     public static List<Player> players = new ArrayList<>();
+    public static List<Player> alivePlayers = new ArrayList<>();
     public static GameAttributes gameAttributes = new GameAttributes();
     private static final Client client = new Client();
     private static final int CONNECTION_TIMEOUT = 5000;
@@ -71,13 +74,20 @@ public class Main extends Application {
         stage.show();
     }
 
+    public static void showTableTop() {
+        stage.setScene(TabletopController.getTableTopScene());
+        stage.show();
+    }
+
     public static void startGame() throws IOException {
         NetworkMessage message = new NetworkMessage();
         message.setType(NetworkMessage.START_GAME);
         message.setPlayer(player);
         client.sendTCP(message);
 
-        showSceneFromFXML(Main.TABLETOP_FXML);
+//        showSceneFromFXML(Main.TABLETOP_FXML);
+        showTableTop();
+
     }
 
 

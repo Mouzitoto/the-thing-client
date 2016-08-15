@@ -1,5 +1,7 @@
 package sample;
 
+import sample.game.Player;
+
 import java.util.List;
 
 /**

@@ -3,6 +3,7 @@ package sample;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import javafx.application.Platform;
+import sample.game.Player;
 
 import java.io.IOException;
 
@@ -19,7 +20,6 @@ public class ClientListener extends Listener {
                 System.out.println(NetworkMessage.NEW_PLAYER + " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
                 Platform.runLater(() -> {
-                    Main.gameAttributes.setPlayersCount(message.getPlayers().size());
                     Main.players = message.getPlayers();
                     Main.gameAttributes.setPlayersNames();
                     for (Player player : message.getPlayers()) {
@@ -46,11 +46,12 @@ public class ClientListener extends Listener {
             if (message.getType().equals(NetworkMessage.START_GAME)) {
                 System.out.println(NetworkMessage.START_GAME + " received from server");
                 Platform.runLater(() -> {
-                    try {
-                        Main.showSceneFromFXML(Main.TABLETOP_FXML);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        Main.showSceneFromFXML(Main.TABLETOP_FXML);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    Main.showTableTop();
                 });
             }
         }

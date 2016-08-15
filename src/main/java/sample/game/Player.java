@@ -1,4 +1,6 @@
-package sample;
+package sample.game;
+
+import javafx.geometry.Point2D;
 
 /**
  * Created by ruslan.babich on 26.07.2016.
@@ -6,6 +8,7 @@ package sample;
 public class Player {
     private String name;
     private boolean isGameOwner;
+    private Point2D tabletopPosition;
 
     public Player() {}
 
@@ -15,6 +18,15 @@ public class Player {
 
 
     //GETTERS AND SETTERS
+
+
+    public Point2D getTabletopPosition() {
+        return tabletopPosition;
+    }
+
+    public void setTabletopPosition(Point2D tabletopPosition) {
+        this.tabletopPosition = tabletopPosition;
+    }
 
     public boolean isGameOwner() {
         return isGameOwner;
