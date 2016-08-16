@@ -3,7 +3,8 @@ package sample.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import sample.Main;
+import sample.game.GameAttributes;
+import sample.network.NetworkClient;
 
 import java.io.IOException;
 
@@ -20,8 +21,8 @@ public class ConnectController {
 
 
     public void connect() throws IOException {
-        Main.player.setName(tfName.getText());
-        Main.connectToServer(tfHostIP.getText(), tfName.getText());
+        GameAttributes.getPlayer().setName(tfName.getText());
+        NetworkClient.connectToServer(tfHostIP.getText(), tfName.getText());
     }
 
 }

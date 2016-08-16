@@ -3,7 +3,6 @@ package sample.controllers;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Light;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -11,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import sample.game.GameAttributes;
 import sample.Main;
 import sample.game.Player;
 
@@ -37,7 +37,7 @@ public class TabletopController {
         rootPane.getChildren().add(line1);
         rootPane.getChildren().add(line2);
 
-        Main.alivePlayers = Main.players;
+        GameAttributes.setAlivePlayers(GameAttributes.getPlayers());
 
 
         calculatePlayersPositions();
@@ -49,16 +49,16 @@ public class TabletopController {
     public static void calculatePlayersPositions() {
 
 
-        double angle = 360 / Main.alivePlayers.size();
+        double angle = 360 / GameAttributes.getAlivePlayers().size();
 
-        for (int i = 0; i < Main.alivePlayers.size(); i++) {
+        for (int i = 0; i < GameAttributes.getAlivePlayers().size(); i++) {
             Line line = new Line(rootCenterX, rootCenterY + 300, rootCenterX, rootCenterY - 300);
             line.setRotate(angle * i);
 
             Point2D point = line.localToParent(rootCenterX, rootCenterY + 300);
-            Main.alivePlayers.get(i).setTabletopPosition(point);
+            GameAttributes.getAlivePlayers().get(i).setTabletopPosition(point);
 
-            drawPlayersStuff(Main.alivePlayers.get(i));
+            drawPlayersStuff(GameAttributes.getAlivePlayers().get(i));
         }
     }
 
@@ -68,7 +68,7 @@ public class TabletopController {
         lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length()*10) / 2);
         lblPlayerName.setLayoutY(player.getTabletopPosition().getY() - 100);
         //todo: change this to ID from DB later
-        if (player.getName() == Main.player.getName())
+        if (player.getName() == GameAttributes.getPlayer().getName())
             lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 20));
         rootPane.getChildren().add(lblPlayerName);
     }

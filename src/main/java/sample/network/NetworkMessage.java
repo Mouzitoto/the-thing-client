@@ -1,4 +1,4 @@
-package sample;
+package sample.network;
 
 import sample.game.Player;
 

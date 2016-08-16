@@ -1,8 +1,10 @@
-package sample;
+package sample.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import javafx.application.Platform;
+import sample.game.GameAttributes;
+import sample.Main;
 import sample.game.Player;
 
 import java.io.IOException;
@@ -20,12 +22,12 @@ public class ClientListener extends Listener {
                 System.out.println(NetworkMessage.NEW_PLAYER + " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
                 Platform.runLater(() -> {
-                    Main.players = message.getPlayers();
-                    Main.gameAttributes.setPlayersNames();
+                    GameAttributes.setPlayers(message.getPlayers());
+                    GameAttributes.setPlayersNames();
                     for (Player player : message.getPlayers()) {
                         //TODO: change this to ID from database in future
-                        if (player.getName().equals(Main.player.getName()))
-                            Main.player = player;
+                        if (player.getName().equals(GameAttributes.getPlayer().getName()))
+                            GameAttributes.setPlayer(player);
                     }
                     try {
                         Main.showSceneFromFXML(Main.LOBBY_FXML);
@@ -39,7 +41,7 @@ public class ClientListener extends Listener {
             if (message.getType().equals(NetworkMessage.SEND_CHAT_MESSAGE)) {
                 System.out.println(NetworkMessage.SEND_CHAT_MESSAGE + " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
-                Platform.runLater(() -> Main.gameAttributes.setLobbyChat(message.getMessage()));
+                Platform.runLater(() -> GameAttributes.setLobbyChat(message.getMessage()));
             }
 
             //START GAME

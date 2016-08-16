@@ -1,13 +1,14 @@
 package sample.controllers;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import sample.game.GameAttributes;
 import sample.Main;
+import sample.network.NetworkClient;
+import sample.network.NetworkMessage;
 
 import java.io.IOException;
 
@@ -18,9 +19,9 @@ public class LobbyController {
 
     @FXML
     public void initialize() {
-        taPlayers.textProperty().bind(Bindings.convert(Main.gameAttributes.playersNamesProperty()));
-        taChatWindow.textProperty().bind(Bindings.convert(Main.gameAttributes.lobbyChatProperty()));
-        btnStartGame.setVisible(Main.player.isGameOwner());
+        taPlayers.textProperty().bind(Bindings.convert(GameAttributes.playersNamesProperty()));
+        taChatWindow.textProperty().bind(Bindings.convert(GameAttributes.lobbyChatProperty()));
+        btnStartGame.setVisible(GameAttributes.getPlayer().isGameOwner());
     }
 
     @FXML
@@ -43,14 +44,15 @@ public class LobbyController {
 
     @FXML
     public void sendMessageToLobbyChat() {
-        String chatMessage = "[" + Main.player.getName() + "]: " + tfPlayersInput.getText();
-        Main.sendChatMessage(chatMessage);
+        String chatMessage = "[" + GameAttributes.getPlayer().getName() + "]: " + tfPlayersInput.getText();
+        NetworkClient.sendChatMessage(chatMessage);
         tfPlayersInput.setText("");
     }
 
     @FXML
     public void startGame() throws IOException {
-        Main.startGame();
+        NetworkClient.sendMessage(NetworkMessage.START_GAME);
+        Main.showTableTop();
     }
 
 }
