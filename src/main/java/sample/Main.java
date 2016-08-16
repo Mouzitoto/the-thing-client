@@ -3,10 +3,12 @@ package sample;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import sample.controllers.TabletopController;
 import sample.game.Player;
 
@@ -38,6 +40,7 @@ public class Main extends Application {
         kryo.register(ArrayList.class);
 
         player.setName(playerName);
+        //todo: add playerID to player
 
         NetworkMessage message = new NetworkMessage();
         message.setType(NetworkMessage.HANDSHAKE);
@@ -65,6 +68,14 @@ public class Main extends Application {
         primaryStage.setTitle("Client");
         primaryStage.setResizable(false);
         showSceneFromFXML(CONNECT_FXML);
+
+        stage.setOnCloseRequest(event -> {
+            NetworkMessage message = new NetworkMessage();
+            message.setType(NetworkMessage.PLAYER_QUIT);
+            message.setPlayer(player);
+
+            client.sendTCP(message);
+        });
     }
 
     public static void showSceneFromFXML(String fxmlName) throws IOException {
@@ -89,7 +100,6 @@ public class Main extends Application {
         showTableTop();
 
     }
-
 
     public static void main(String[] args) {
         launch(args);

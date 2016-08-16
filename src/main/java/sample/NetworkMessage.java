@@ -13,6 +13,7 @@ public class NetworkMessage {
     public static final String SEND_CHAT_MESSAGE = "sendChatMessage";
     public static final String NEW_PLAYER = "newPlayer";
     public static final String START_GAME = "startGame";
+    public static final String PLAYER_QUIT = "playerQuit";
 
     private String type;
     private String message;
