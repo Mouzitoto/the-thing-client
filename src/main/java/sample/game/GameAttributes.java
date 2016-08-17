@@ -1,5 +1,7 @@
 package sample.game;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class GameAttributes {
     private static SimpleStringProperty playersNames = new SimpleStringProperty(GameAttributes.class, "playersNames");
     private static SimpleStringProperty lobbyChat = new SimpleStringProperty(GameAttributes.class, "lobbyChat");
+    private static SimpleBooleanProperty isGameOwner = new SimpleBooleanProperty(Player.class, "isGameOwner");
     private static Player player = new Player();
     private static List<Player> players = new ArrayList<>();
     private static List<Player> alivePlayers = new ArrayList<>();
@@ -26,6 +29,8 @@ public class GameAttributes {
 
     public static void setPlayer(Player player) {
         GameAttributes.player = player;
+        if (player.isGameOwner())
+            setGameOwner(true);
     }
 
     public static List<Player> getPlayers() {
@@ -75,6 +80,18 @@ public class GameAttributes {
 
     public static StringProperty lobbyChatProperty() {
         return lobbyChat;
+    }
+
+    public static boolean isGameOwner() {
+        return isGameOwner.get();
+    }
+
+    public static void setGameOwner(boolean gameOwner) {
+        isGameOwner.set(gameOwner);
+    }
+
+    public static BooleanProperty isGameOwnerProperty() {
+        return isGameOwner;
     }
 }
 

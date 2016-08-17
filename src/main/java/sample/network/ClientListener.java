@@ -48,13 +48,20 @@ public class ClientListener extends Listener {
             if (message.getType().equals(NetworkMessage.START_GAME)) {
                 System.out.println(NetworkMessage.START_GAME + " received from server");
                 Platform.runLater(() -> {
-//                    try {
-//                        Main.showSceneFromFXML(Main.TABLETOP_FXML);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                     Main.showTableTop();
                 });
+            }
+
+            //PLAYER QUIT
+            if (message.getType().equals(NetworkMessage.PLAYER_QUIT)) {
+                System.out.println(NetworkMessage.PLAYER_QUIT + " received from server");
+                GameAttributes.setPlayers(message.getPlayers());
+                GameAttributes.setPlayersNames();
+                for (Player player : message.getPlayers()) {
+                    //TODO: change this to ID from database in future
+                    if (player.getName().equals(GameAttributes.getPlayer().getName()))
+                        GameAttributes.setPlayer(player);
+                }
             }
         }
     }

@@ -1,7 +1,11 @@
 package sample.network;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.esotericsoftware.kryonet.Client;
+import com.sun.javafx.binding.ExpressionHelper;
+import com.sun.javafx.binding.ExpressionHelperBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
 import sample.game.GameAttributes;
 import sample.game.Player;
@@ -29,6 +33,7 @@ public class NetworkClient {
         kryo.register(Player.class);
         kryo.register(ArrayList.class);
         kryo.register(Point2D.class);
+        kryo.register(Class.class);
 
         GameAttributes.getPlayer().setName(playerName);
         //todo: add playerID to player

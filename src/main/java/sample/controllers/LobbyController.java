@@ -22,6 +22,7 @@ public class LobbyController {
         taPlayers.textProperty().bind(Bindings.convert(GameAttributes.playersNamesProperty()));
         taChatWindow.textProperty().bind(Bindings.convert(GameAttributes.lobbyChatProperty()));
         btnStartGame.setVisible(GameAttributes.getPlayer().isGameOwner());
+        btnStartGame.visibleProperty().bind(GameAttributes.isGameOwnerProperty());
     }
 
     @FXML
