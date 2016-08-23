@@ -81,7 +81,7 @@ public class TabletopController {
         ivDeck.setFitWidth(80);
         ivDeck.setFitHeight(120);
 
-        Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/1.png"));
+        Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic-cover.png"));
         ivDeck.setImage(imgDeck);
 
         rootPane.getChildren().add(ivDeck);
@@ -93,7 +93,7 @@ public class TabletopController {
         ivDroppingDeck.setFitWidth(80);
         ivDroppingDeck.setFitHeight(120);
 
-        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/2.png"));
+        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/axe.png"));
         ivDroppingDeck.setImage(imgDroppingDeck);
 
         rootPane.getChildren().add(ivDroppingDeck);

@@ -1,5 +1,6 @@
 package sample.network;
 
+import sample.game.Card;
 import sample.game.Player;
 
 import java.util.List;
@@ -14,11 +15,24 @@ public class NetworkMessage {
     public static final String NEW_PLAYER = "newPlayer";
     public static final String START_GAME = "startGame";
     public static final String PLAYER_QUIT = "playerQuit";
+    public static final String GET_CARD_FROM_DECK = "getCardFromDeck";
 
     private String type;
     private String message;
     private Player player;
     private List<Player> players;
+    private Card card;
+
+
+    //GETTERS AND SETTERS
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
 
     public String getType() {
         return type;

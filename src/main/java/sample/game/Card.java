@@ -5,9 +5,20 @@ package sample.game;
  */
 public class Card {
     private int id;
-    private CardTypes type;
+    private String type;
     private String description;
     private CardActions action;
+    private int playersCount;
+
+    public Card() {}
+
+    public Card (int id, String type, String description, CardActions action, int playersCount) {
+        this.id = id;
+        this.type = type;
+        this.description = description;
+        this.action = action;
+        this.playersCount = playersCount;
+    }
 
 
     //GETTERS AND SETTERS
@@ -29,11 +40,11 @@ public class Card {
         this.description = description;
     }
 
-    public CardTypes getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(CardTypes type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -43,5 +54,13 @@ public class Card {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getPlayersCount() {
+        return playersCount;
+    }
+
+    public void setPlayersCount(int playersCount) {
+        this.playersCount = playersCount;
     }
 }

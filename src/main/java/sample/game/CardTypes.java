@@ -5,5 +5,12 @@ package sample.game;
  */
 public enum CardTypes {
     panic,
-    event;
+    event,
+    filler1,
+    filler2,
+    filler3,
+    filler4,
+    filler5,
+    filler6,
+    filler7
 }
