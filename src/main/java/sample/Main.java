@@ -2,8 +2,10 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sample.controllers.TabletopController;
 import sample.network.NetworkClient;
@@ -25,7 +27,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         primaryStage.setTitle("Client");
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         showSceneFromFXML(CONNECT_FXML);
     }
 
@@ -37,7 +39,16 @@ public class Main extends Application {
     }
 
     public static void showTableTop() {
-        stage.setScene(TabletopController.getTableTopScene());
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        stage.setScene(TabletopController.getTableTopScene(screenBounds));
+
+        //set Stage boundaries to visible bounds of the main screen
+        stage.setX(screenBounds.getMinX());
+        stage.setY(screenBounds.getMinY());
+        stage.setWidth(screenBounds.getWidth());
+        stage.setHeight(screenBounds.getHeight());
+
         stage.show();
     }
 }

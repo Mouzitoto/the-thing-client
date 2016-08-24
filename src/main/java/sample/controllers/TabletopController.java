@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import sample.game.GameAttributes;
 import sample.Main;
 import sample.game.Player;
@@ -25,15 +27,15 @@ public class TabletopController {
     private static double rootCenterY;
 
 
-    private static void init() {
+    private static void init(Rectangle2D screenBounds) {
         rootPane = new Pane();
-        scene = new Scene(rootPane, 1200, 800, Color.BLACK);
+        scene = new Scene(rootPane, screenBounds.getWidth(), screenBounds.getHeight(), Color.BLACK);
 
         rootCenterX = rootPane.getWidth() / 2;
         rootCenterY = rootPane.getHeight() / 2;
 
-        Line line1 = new Line(rootCenterX-1, rootCenterY, rootCenterX+1, rootCenterY);
-        Line line2 = new Line(rootCenterX, rootCenterY-1, rootCenterX, rootCenterY+1);
+        Line line1 = new Line(rootCenterX - 1, rootCenterY, rootCenterX + 1, rootCenterY);
+        Line line2 = new Line(rootCenterX, rootCenterY - 1, rootCenterX, rootCenterY + 1);
         rootPane.getChildren().add(line1);
         rootPane.getChildren().add(line2);
 
@@ -47,8 +49,6 @@ public class TabletopController {
 
 
     public static void calculatePlayersPositions() {
-
-
         double angle = 360 / GameAttributes.getAlivePlayers().size();
 
         for (int i = 0; i < GameAttributes.getAlivePlayers().size(); i++) {
@@ -65,11 +65,11 @@ public class TabletopController {
     public static void drawPlayersStuff(Player player) {
         Label lblPlayerName = new Label(player.getName());
 
-        lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length()*10) / 2);
+        lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length() * 10) / 2);
         lblPlayerName.setLayoutY(player.getTabletopPosition().getY() - 100);
         //todo: change this to ID from DB later
         if (player.getName() == GameAttributes.getPlayer().getName())
-            lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 20));
+            lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 16));
         rootPane.getChildren().add(lblPlayerName);
     }
 
@@ -99,8 +99,8 @@ public class TabletopController {
         rootPane.getChildren().add(ivDroppingDeck);
     }
 
-    public static Scene getTableTopScene() {
-        init();
+    public static Scene getTableTopScene(Rectangle2D screenBounds) {
+        init(screenBounds);
 
         return scene;
     }
