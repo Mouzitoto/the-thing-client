@@ -12,6 +12,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
+import sample.game.Card;
 import sample.game.GameAttributes;
 import sample.Main;
 import sample.game.Player;
@@ -34,13 +35,13 @@ public class TabletopController {
         rootCenterX = rootPane.getWidth() / 2;
         rootCenterY = rootPane.getHeight() / 2;
 
+        //only for debugging, just to know where the center is
         Line line1 = new Line(rootCenterX - 1, rootCenterY, rootCenterX + 1, rootCenterY);
         Line line2 = new Line(rootCenterX, rootCenterY - 1, rootCenterX, rootCenterY + 1);
         rootPane.getChildren().add(line1);
         rootPane.getChildren().add(line2);
 
         GameAttributes.setAlivePlayers(GameAttributes.getPlayers());
-
 
         calculatePlayersPositions();
         drawDeckAndDroppingDeck();
@@ -63,6 +64,7 @@ public class TabletopController {
     }
 
     public static void drawPlayersStuff(Player player) {
+        //draw player name
         Label lblPlayerName = new Label(player.getName());
 
         lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length() * 10) / 2);
@@ -71,29 +73,47 @@ public class TabletopController {
         if (player.getName() == GameAttributes.getPlayer().getName())
             lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 16));
         rootPane.getChildren().add(lblPlayerName);
+
+
+        //draw player hand
+        for (int i = 0; i < player.getHandCards().size(); i++) {
+            Card card = player.getHandCards().get(i);
+            ImageView imageView = new ImageView();
+            imageView.setLayoutX(player.getTabletopPosition().getX() - 190 + i * 80 + i * 20);
+            imageView.setLayoutY(player.getTabletopPosition().getY());
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(100);
+
+            Image img = new Image(Main.class.getClassLoader().getResourceAsStream("cards/" + card.getType() + "/" + card.getAction().name() + ".png"));
+
+            imageView.setImage(img);
+
+            rootPane.getChildren().add(imageView);
+        }
+
     }
 
     public static void drawDeckAndDroppingDeck() {
         //Deck
         ImageView ivDeck = new ImageView();
-        ivDeck.setLayoutX(rootCenterX - 100);
-        ivDeck.setLayoutY(rootCenterY - 60);
+        ivDeck.setLayoutX(40);
+        ivDeck.setLayoutY(40);
         ivDeck.setFitWidth(80);
         ivDeck.setFitHeight(120);
 
-        Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic-cover.png"));
+        Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic/cover.png"));
         ivDeck.setImage(imgDeck);
 
         rootPane.getChildren().add(ivDeck);
 
         //Dropping Deck
         ImageView ivDroppingDeck = new ImageView();
-        ivDroppingDeck.setLayoutX(rootCenterX + 20);
-        ivDroppingDeck.setLayoutY(rootCenterY - 60);
+        ivDroppingDeck.setLayoutX(140);
+        ivDroppingDeck.setLayoutY(40);
         ivDroppingDeck.setFitWidth(80);
         ivDroppingDeck.setFitHeight(120);
 
-        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/axe.png"));
+        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/event/axe.png"));
         ivDroppingDeck.setImage(imgDroppingDeck);
 
         rootPane.getChildren().add(ivDroppingDeck);
