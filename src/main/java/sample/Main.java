@@ -27,10 +27,6 @@ public class Main extends Application {
         primaryStage.setTitle("Client");
         primaryStage.setResizable(false);
         showSceneFromFXML(CONNECT_FXML);
-
-        stage.setOnCloseRequest(event ->
-            NetworkClient.sendMessage(NetworkMessage.PLAYER_QUIT)
-        );
     }
 
     public static void showSceneFromFXML(String fxmlName) throws IOException {
