@@ -1,17 +1,20 @@
 package sample.controllers;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import sample.game.Card;
+import sample.game.CardImageView;
 import sample.game.GameAttributes;
 import sample.Main;
 import sample.game.Player;
@@ -28,6 +31,7 @@ public class TabletopController {
 
     private static final int CARD_WIDTH = 80;
     private static final int CARD_HEIGHT = 100;
+    private static final int CARD_SEPARATOR = 20;
 
 
     private static void init(Rectangle2D screenBounds) {
@@ -37,11 +41,11 @@ public class TabletopController {
         rootCenterX = rootPane.getWidth() / 2;
         rootCenterY = rootPane.getHeight() / 2;
 
-        //only for debugging, just to know where the center is
-        Line line1 = new Line(rootCenterX - 1, rootCenterY, rootCenterX + 1, rootCenterY);
-        Line line2 = new Line(rootCenterX, rootCenterY - 1, rootCenterX, rootCenterY + 1);
-        rootPane.getChildren().add(line1);
-        rootPane.getChildren().add(line2);
+//        only for debugging, just to know where the center is
+//        Line line1 = new Line(rootCenterX - 1, rootCenterY, rootCenterX + 1, rootCenterY);
+//        Line line2 = new Line(rootCenterX, rootCenterY - 1, rootCenterX, rootCenterY + 1);
+//        rootPane.getChildren().add(line1);
+//        rootPane.getChildren().add(line2);
 
         GameAttributes.setAlivePlayers(GameAttributes.getPlayers());
 
@@ -61,6 +65,9 @@ public class TabletopController {
 
             Point2D point = line.localToParent(rootCenterX, rootCenterY + 300);
             GameAttributes.getAlivePlayers().get(i).setTabletopPosition(point);
+
+            if (GameAttributes.getAlivePlayers().get(i).getName().equals(GameAttributes.getPlayer().getName()))
+                GameAttributes.getPlayer().setTabletopPosition(point);
         }
     }
 
@@ -70,7 +77,7 @@ public class TabletopController {
             Label lblPlayerName = new Label(player.getName());
 
             lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length() * 10) / 2);
-            lblPlayerName.setLayoutY(player.getTabletopPosition().getY() - CARD_HEIGHT);
+            lblPlayerName.setLayoutY(player.getTabletopPosition().getY() - 30);
             //todo: change this to ID from DB later
             if (player.getName() == GameAttributes.getPlayer().getName())
                 lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 16));
@@ -80,7 +87,7 @@ public class TabletopController {
             if (!player.getName().equals(GameAttributes.getPlayer().getName())) {
                 for (int i = 0; i < 4; i++) {
                     ImageView imageView = new ImageView();
-                    imageView.setLayoutX(player.getTabletopPosition().getX() - 190 + i * CARD_WIDTH + i * 20);
+                    imageView.setLayoutX(player.getTabletopPosition().getX() - 190 + i * CARD_WIDTH + i * CARD_SEPARATOR);
                     imageView.setLayoutY(player.getTabletopPosition().getY());
                     imageView.setFitWidth(CARD_WIDTH);
                     imageView.setFitHeight(CARD_HEIGHT);
@@ -98,8 +105,9 @@ public class TabletopController {
         //draw player hand
         for (int i = 0; i < GameAttributes.getPlayer().getHandCards().size(); i++) {
             Card card = GameAttributes.getPlayer().getHandCards().get(i);
-            ImageView imageView = new ImageView();
-            imageView.setLayoutX(GameAttributes.getPlayer().getTabletopPosition().getX() - 190 + i * CARD_WIDTH + i * 20);
+            CardImageView imageView = new CardImageView();
+            int playerHandEdgePoint = (CARD_WIDTH * 4 + CARD_SEPARATOR * 3) / 2 - CARD_WIDTH;
+            imageView.setLayoutX(GameAttributes.getPlayer().getTabletopPosition().getX() + playerHandEdgePoint - i * CARD_WIDTH - i * CARD_SEPARATOR);
             imageView.setLayoutY(GameAttributes.getPlayer().getTabletopPosition().getY());
             imageView.setFitWidth(CARD_WIDTH);
             imageView.setFitHeight(CARD_HEIGHT);
@@ -123,8 +131,9 @@ public class TabletopController {
         Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic/cover.png"));
         ivDeck.setImage(imgDeck);
 
+
         Label lblDeck = new Label("Колода");
-        lblDeck.setLayoutX(40 + CARD_WIDTH/2 - 20);
+        lblDeck.setLayoutX(40 + CARD_WIDTH/2 - CARD_SEPARATOR);
         lblDeck.setLayoutY(20);
 
         rootPane.getChildren().add(ivDeck);
@@ -132,7 +141,7 @@ public class TabletopController {
 
         //Dropping Deck
         ImageView ivDroppingDeck = new ImageView();
-        ivDroppingDeck.setLayoutX(40 + 20 + CARD_WIDTH);
+        ivDroppingDeck.setLayoutX(40 + CARD_SEPARATOR + CARD_WIDTH);
         ivDroppingDeck.setLayoutY(40);
         ivDroppingDeck.setFitWidth(CARD_WIDTH);
         ivDroppingDeck.setFitHeight(CARD_HEIGHT);
@@ -141,7 +150,7 @@ public class TabletopController {
         ivDroppingDeck.setImage(imgDroppingDeck);
 
         Label lblDroppingDeck = new Label("Сброс");
-        lblDroppingDeck.setLayoutX(40 + CARD_WIDTH/2 - 20 + CARD_WIDTH + 20);
+        lblDroppingDeck.setLayoutX(40 + CARD_WIDTH/2 - CARD_SEPARATOR + CARD_WIDTH + CARD_SEPARATOR);
         lblDroppingDeck.setLayoutY(20);
 
         rootPane.getChildren().add(ivDroppingDeck);

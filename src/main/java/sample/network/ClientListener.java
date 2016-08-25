@@ -49,6 +49,7 @@ public class ClientListener extends Listener {
             if (message.getType().equals(NetworkMessage.START_GAME)) {
                 System.out.println(NetworkMessage.START_GAME + " received from server");
                 Platform.runLater(() -> {
+                    GameAttributes.setPlayers(message.getPlayers());
                     Main.showTableTop();
                 });
             }
