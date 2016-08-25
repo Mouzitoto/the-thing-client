@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import sample.game.Card;
 import sample.game.GameAttributes;
 import sample.Main;
@@ -124,19 +123,29 @@ public class TabletopController {
         Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic/cover.png"));
         ivDeck.setImage(imgDeck);
 
+        Label lblDeck = new Label("Колода");
+        lblDeck.setLayoutX(40 + CARD_WIDTH/2 - 20);
+        lblDeck.setLayoutY(20);
+
         rootPane.getChildren().add(ivDeck);
+        rootPane.getChildren().add(lblDeck);
 
         //Dropping Deck
         ImageView ivDroppingDeck = new ImageView();
-        ivDroppingDeck.setLayoutX(140);
+        ivDroppingDeck.setLayoutX(40 + 20 + CARD_WIDTH);
         ivDroppingDeck.setLayoutY(40);
         ivDroppingDeck.setFitWidth(CARD_WIDTH);
         ivDroppingDeck.setFitHeight(CARD_HEIGHT);
 
-        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/event/axe.png"));
+        Image imgDroppingDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/event/cover.png"));
         ivDroppingDeck.setImage(imgDroppingDeck);
 
+        Label lblDroppingDeck = new Label("Сброс");
+        lblDroppingDeck.setLayoutX(40 + CARD_WIDTH/2 - 20 + CARD_WIDTH + 20);
+        lblDroppingDeck.setLayoutY(20);
+
         rootPane.getChildren().add(ivDroppingDeck);
+        rootPane.getChildren().add(lblDroppingDeck);
     }
 
     public static Scene getTableTopScene(Rectangle2D screenBounds) {
