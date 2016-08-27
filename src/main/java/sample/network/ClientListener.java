@@ -50,6 +50,7 @@ public class ClientListener extends Listener {
                 System.out.println(NetworkMessage.START_GAME + " received from server");
                 Platform.runLater(() -> {
                     GameAttributes.setPlayers(message.getPlayers());
+                    GameAttributes.setAlivePlayers(message.getAlivePlayers());
                     Main.showTableTop();
                 });
             }

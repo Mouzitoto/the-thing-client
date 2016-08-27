@@ -21,10 +21,20 @@ public class NetworkMessage {
     private String message;
     private Player player;
     private List<Player> players;
+    private List<Player> alivePlayers;
     private Card card;
 
 
     //GETTERS AND SETTERS
+
+
+    public List<Player> getAlivePlayers() {
+        return alivePlayers;
+    }
+
+    public void setAlivePlayers(List<Player> alivePlayers) {
+        this.alivePlayers = alivePlayers;
+    }
 
     public Card getCard() {
         return card;

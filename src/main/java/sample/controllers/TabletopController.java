@@ -47,8 +47,6 @@ public class TabletopController {
 //        rootPane.getChildren().add(line1);
 //        rootPane.getChildren().add(line2);
 
-        GameAttributes.setAlivePlayers(GameAttributes.getPlayers());
-
         calculatePlayersPositions();
         drawDeckAndDroppingDeck();
         drawMoveDirectionArrow(GameAttributes.getMoveDirection());
