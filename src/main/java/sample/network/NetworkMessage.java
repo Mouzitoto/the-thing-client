@@ -20,6 +20,7 @@ public class NetworkMessage {
     private String type;
     private String message;
     private Player player;
+    private String nowMovingPlayerName;
     private List<Player> players;
     private List<Player> alivePlayers;
     private Card card;
@@ -27,6 +28,14 @@ public class NetworkMessage {
 
     //GETTERS AND SETTERS
 
+
+    public String getNowMovingPlayerName() {
+        return nowMovingPlayerName;
+    }
+
+    public void setNowMovingPlayerName(String nowMovingPlayerName) {
+        this.nowMovingPlayerName = nowMovingPlayerName;
+    }
 
     public List<Player> getAlivePlayers() {
         return alivePlayers;

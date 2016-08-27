@@ -19,10 +19,24 @@ public class GameAttributes {
     private static List<Player> players = new ArrayList<>();
     private static List<Player> alivePlayers = new ArrayList<>();
     private static int moveDirection = 1;
+    private static SimpleStringProperty nowMovingPlayerName = new SimpleStringProperty(GameAttributes.class, "nowMovingPlayerName");
 
 
     //GETTERS AND SETTERS
 
+
+    public static String getNowMovingPlayerName() {
+        return nowMovingPlayerName.get();
+    }
+
+    public static StringProperty nowMovingPlayerNameProperty() {
+        return nowMovingPlayerName;
+    }
+
+    public static void setNowMovingPlayerName(String nowMovingPlayerName) {
+        String str = "Now moving: " + nowMovingPlayerName;
+        GameAttributes.nowMovingPlayerName.set(str);
+    }
 
     public static int getMoveDirection() {
         return moveDirection;

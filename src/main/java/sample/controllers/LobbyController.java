@@ -53,7 +53,6 @@ public class LobbyController {
     @FXML
     public void startGame() throws IOException {
         NetworkClient.sendMessage(NetworkMessage.START_GAME);
-        Main.showTableTop();
     }
 
 }

@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
@@ -41,6 +42,10 @@ public class TabletopController {
         rootCenterX = rootPane.getWidth() / 2;
         rootCenterY = rootPane.getHeight() / 2;
 
+        if (GameAttributes.getAlivePlayers() == null) {
+            System.out.println("omg");
+        }
+
 //        only for debugging, just to know where the center is
 //        Line line1 = new Line(rootCenterX - 1, rootCenterY, rootCenterX + 1, rootCenterY);
 //        Line line2 = new Line(rootCenterX, rootCenterY - 1, rootCenterX, rootCenterY + 1);
@@ -50,8 +55,18 @@ public class TabletopController {
         calculatePlayersPositions();
         drawDeckAndDroppingDeck();
         drawMoveDirectionArrow(GameAttributes.getMoveDirection());
+        drawNowMovingPlayerName();
         drawPlayersStuff();
 
+    }
+
+    public static void drawNowMovingPlayerName() {
+        Label lblNowMovingPlayerName = new Label();
+        lblNowMovingPlayerName.setLayoutX(40);
+        lblNowMovingPlayerName.setLayoutY(120 + CARD_HEIGHT + CARD_WIDTH * 2);
+        lblNowMovingPlayerName.textProperty().bind(Bindings.convert(GameAttributes.nowMovingPlayerNameProperty()));
+
+        rootPane.getChildren().add(lblNowMovingPlayerName);
     }
 
     public static void drawMoveDirectionArrow(int direction) {

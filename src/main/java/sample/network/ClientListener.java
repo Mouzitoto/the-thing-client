@@ -51,6 +51,7 @@ public class ClientListener extends Listener {
                 Platform.runLater(() -> {
                     GameAttributes.setPlayers(message.getPlayers());
                     GameAttributes.setAlivePlayers(message.getAlivePlayers());
+                    GameAttributes.setNowMovingPlayerName(message.getNowMovingPlayerName());
                     Main.showTableTop();
                 });
             }
