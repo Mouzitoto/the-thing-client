@@ -18,10 +18,19 @@ public class GameAttributes {
     private static Player player = new Player();
     private static List<Player> players = new ArrayList<>();
     private static List<Player> alivePlayers = new ArrayList<>();
+    private static int moveDirection = 1;
 
 
     //GETTERS AND SETTERS
 
+
+    public static int getMoveDirection() {
+        return moveDirection;
+    }
+
+    public static void setMoveDirection(int moveDirection) {
+        GameAttributes.moveDirection = moveDirection;
+    }
 
     public static Player getPlayer() {
         return player;

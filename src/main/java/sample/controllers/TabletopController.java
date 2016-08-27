@@ -51,10 +51,28 @@ public class TabletopController {
 
         calculatePlayersPositions();
         drawDeckAndDroppingDeck();
+        drawMoveDirectionArrow(GameAttributes.getMoveDirection());
         drawPlayersStuff();
 
     }
 
+    public static void drawMoveDirectionArrow(int direction) {
+        ImageView imageView = new ImageView();
+        imageView.setLayoutX(50);
+        imageView.setLayoutY(100 + CARD_HEIGHT);
+        imageView.setFitWidth(CARD_WIDTH * 2);
+        imageView.setFitHeight(CARD_WIDTH * 2);
+
+        Image imgMoveDirectionArrow;
+        if (direction == 1)
+            imgMoveDirectionArrow = new Image(Main.class.getClassLoader().getResourceAsStream("clockwise-arrow.png"));
+        else
+            imgMoveDirectionArrow = new Image(Main.class.getClassLoader().getResourceAsStream("anti-clockwise-arrow.png"));
+
+        imageView.setImage(imgMoveDirectionArrow);
+
+        rootPane.getChildren().add(imageView);
+    }
 
     public static void calculatePlayersPositions() {
         double angle = 360 / GameAttributes.getAlivePlayers().size();
