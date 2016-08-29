@@ -3,6 +3,7 @@ package sample.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import javafx.application.Platform;
+import sample.controllers.TabletopController;
 import sample.game.Card;
 import sample.game.GameAttributes;
 import sample.Main;
@@ -72,10 +73,12 @@ public class ClientListener extends Listener {
             if (message.getType().equals(NetworkMessage.GET_CARD_FROM_DECK)) {
                 System.out.println(NetworkMessage.GET_CARD_FROM_DECK + " received from server");
 
-                GameAttributes.getPlayer().getHandCards().add(message.getCard());
-
-                Card card = GameAttributes.getPlayer().getHandCards().get(GameAttributes.getPlayer().getHandCards().size() - 1);
-                System.out.println("My cards: " + card.getType() + " " + card.getAction());
+                if (message.getCard().getType().equals(Card.CARD_TYPE_EVENT)) {
+                    GameAttributes.getPlayer().getHandCards().add(message.getCard());
+                } else {
+                    GameAttributes.setNowPlayingCard(message.getCard());
+                    TabletopController.drawNowPlayingCard();
+                }
             }
         }
     }

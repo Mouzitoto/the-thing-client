@@ -17,6 +17,7 @@ public class NetworkMessage {
     public static final String PLAYER_QUIT = "playerQuit";
     public static final String GET_CARD_FROM_DECK = "getCardFromDeck";
 
+
     private String type;
     private String message;
     private Player player;

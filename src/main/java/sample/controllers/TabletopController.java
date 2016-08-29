@@ -1,10 +1,12 @@
 package sample.controllers;
 
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +21,11 @@ import sample.game.CardImageView;
 import sample.game.GameAttributes;
 import sample.Main;
 import sample.game.Player;
+import sample.network.ClientListener;
+import sample.network.NetworkClient;
+import sample.network.NetworkMessage;
+
+import java.io.IOException;
 
 /**
  * Created by ruslan.babich on 08.08.2016.
@@ -60,12 +67,32 @@ public class TabletopController {
 
     }
 
+    public static void drawNowPlayingCard() {
+        CardImageView ivNowPlayingCard = new CardImageView();
+        ivNowPlayingCard.setLayoutX(rootCenterX - CARD_WIDTH / 2);
+        ivNowPlayingCard.setLayoutY(rootCenterY - CARD_HEIGHT / 2);
+        ivNowPlayingCard.setFitWidth(CARD_WIDTH);
+        ivNowPlayingCard.setFitHeight(CARD_HEIGHT);
+
+        Card nowPlayingCard = GameAttributes.getNowPlayingCard();
+        Image imgNowPlayingCard = new Image(Main.class.getClassLoader().getResourceAsStream(nowPlayingCard.getAction().name() + ".png"));
+
+        ivNowPlayingCard.setImage(imgNowPlayingCard);
+
+        rootPane.getChildren().add(ivNowPlayingCard);
+    }
+
     public static void drawNowMovingPlayerName() {
+        Label lbl = new Label("Now is moving: ");
+        lbl.setLayoutX(40);
+        lbl.setLayoutY(120 + CARD_HEIGHT + CARD_WIDTH * 2);
+
         Label lblNowMovingPlayerName = new Label();
-        lblNowMovingPlayerName.setLayoutX(40);
+        lblNowMovingPlayerName.setLayoutX(130);
         lblNowMovingPlayerName.setLayoutY(120 + CARD_HEIGHT + CARD_WIDTH * 2);
         lblNowMovingPlayerName.textProperty().bind(Bindings.convert(GameAttributes.nowMovingPlayerNameProperty()));
 
+        rootPane.getChildren().add(lbl);
         rootPane.getChildren().add(lblNowMovingPlayerName);
     }
 
@@ -162,6 +189,29 @@ public class TabletopController {
         Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic/cover.png"));
         ivDeck.setImage(imgDeck);
 
+        ivDeck.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (GameAttributes.getPlayer().getName().equals(GameAttributes.getNowMovingPlayerName())) {
+                    NetworkClient.sendMessage(NetworkMessage.GET_CARD_FROM_DECK);
+                }
+            }
+        });
+
+        Button btn = new Button();
+        btn.setText("omg");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Main.showSceneFromFXML(Main.LOBBY_FXML);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        rootPane.getChildren().add(btn);
 
         Label lblDeck = new Label("Колода");
         lblDeck.setLayoutX(40 + CARD_WIDTH/2 - CARD_SEPARATOR);

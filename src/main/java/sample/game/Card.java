@@ -4,6 +4,9 @@ package sample.game;
  * Created by ruslan.babich on 08.08.2016.
  */
 public class Card {
+    public static final String CARD_TYPE_PANIC = "panic";
+    public static final String CARD_TYPE_EVENT = "event";
+
     private int id;
     private String type;
     private String description;

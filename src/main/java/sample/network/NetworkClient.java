@@ -37,9 +37,9 @@ public class NetworkClient {
         GameAttributes.getPlayer().setName(playerName);
         //todo: add playerID to player
 
-        sendMessage(NetworkMessage.HANDSHAKE);
-
         client.addListener(new ClientListener());
+
+        sendMessage(NetworkMessage.HANDSHAKE);
 
         //we need to change Scene to lobby after server response
 //        showSceneFromFXML(LOBBY_FXML);
