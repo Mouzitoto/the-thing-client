@@ -3,12 +3,13 @@ package sample.network;
 import sample.game.Card;
 import sample.game.Player;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ruslan.babich on 21.07.2016.
  */
-public class NetworkMessage {
+public class NetworkMessage implements Serializable{
 
     public static final String HANDSHAKE = "handshake";
     public static final String SEND_CHAT_MESSAGE = "sendChatMessage";

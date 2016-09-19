@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sample.controllers.TabletopController;
+import sample.game.GameAttributes;
 import sample.network.NetworkClient;
 import sample.network.NetworkMessage;
 
@@ -17,6 +18,7 @@ public class Main extends Application {
     public static final String LOBBY_FXML = "lobby.fxml";
     public static final String CONNECT_FXML = "connect.fxml";
     public static final String TABLETOP_FXML = "tabletop.fxml";
+    public static NetworkClient client;
     private static Stage stage;
 
     public static void main(String[] args) {
@@ -50,5 +52,13 @@ public class Main extends Application {
         stage.setHeight(screenBounds.getHeight());
 
         stage.show();
+    }
+
+    public static void connectToServer(String hostIP, String playerName) throws IOException, InterruptedException {
+        client = NetworkClient.start(hostIP);
+
+        GameAttributes.getPlayer().setName(playerName);
+
+        client.sendMessage(NetworkMessage.HANDSHAKE);
     }
 }

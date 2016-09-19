@@ -1,49 +1,29 @@
 package sample.network;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
-import javafx.geometry.Point2D;
 import sample.game.*;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
+import javax.net.ssl.SSLException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by ruslan.babich on 16.08.2016.
  */
 public class NetworkClient {
-    private static final Client client = new Client();
-    private static final int CONNECTION_TIMEOUT = 5000;
     private static final int TCP_PORT = 27015;
-    private static final int UDP_PORT = 27016;
-
-
-
-    public static void connectToServer(String hostIP, String playerName) throws IOException {
-        client.start();
-        client.connect(CONNECTION_TIMEOUT, hostIP, TCP_PORT, UDP_PORT);
-
-        Kryo kryo = client.getKryo();
-        kryo.register(NetworkMessage.class, 111);
-        kryo.register(Player.class, 112);
-        kryo.register(ArrayList.class, 113);
-        kryo.register(Point2D.class, 114);
-        kryo.register(Card.class, 115);
-//        kryo.register(CardTypes.class, 216);
-        kryo.register(CardActions.class, 117);
-
-
-
-        GameAttributes.getPlayer().setName(playerName);
-        //todo: add playerID to player
-
-        client.addListener(new ClientListener());
-
-        sendMessage(NetworkMessage.HANDSHAKE);
-
-        //we need to change Scene to lobby after server response
-//        showSceneFromFXML(LOBBY_FXML);
-    }
+    private static final boolean SSL = System.getProperty("ssl") != null;
 
     public static void sendChatMessage(String chatMessage) {
         NetworkMessage message = new NetworkMessage();
@@ -51,13 +31,49 @@ public class NetworkClient {
         message.setMessage(chatMessage);
         message.setPlayer(GameAttributes.getPlayer());
 
-        client.sendTCP(message);
+//        client.sendTCP(message);
     }
 
     public static void sendMessage(String type) {
         NetworkMessage message = new NetworkMessage();
         message.setType(type);
         message.setPlayer(GameAttributes.getPlayer());
-        client.sendTCP(message);
+//        client.sendTCP(message);
+    }
+
+    public static NetworkClient start(final String hostIP) throws SSLException, InterruptedException {
+        final SslContext sslCtx;
+        if (SSL) {
+            sslCtx = SslContextBuilder.forClient()
+                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        } else {
+            sslCtx = null;
+        }
+
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline p = ch.pipeline();
+                            if (sslCtx != null) {
+                                p.addLast(sslCtx.newHandler(ch.alloc(), hostIP, TCP_PORT));
+                            }
+                            p.addLast(
+                                    new ObjectEncoder(),
+                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                    new NetworkClientHandler());
+                        }
+                    });
+
+            // Start the connection attempt.
+            b.connect(hostIP, TCP_PORT).sync().channel().closeFuture().sync();
+        } finally {
+            group.shutdownGracefully();
+        }
+        return null;
     }
 }
