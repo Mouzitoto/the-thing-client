@@ -1,9 +1,11 @@
 package sample.game;
 
+import java.io.Serializable;
+
 /**
  * Created by ruslan.babich on 08.08.2016.
  */
-public class Card {
+public class Card implements Serializable {
     public static final String CARD_TYPE_PANIC = "panic";
     public static final String CARD_TYPE_EVENT = "event";
 

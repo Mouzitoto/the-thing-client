@@ -4,6 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.application.Platform;
 import sample.Main;
+import sample.controllers.TabletopController;
+import sample.game.Card;
 import sample.game.GameAttributes;
 import sample.game.Player;
 
@@ -24,6 +26,8 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
             final NetworkMessage message = (NetworkMessage) msg;
 
             //NEW PLAYER
+            //NEW PLAYER
+            //NEW PLAYER
             if (message.getType().equals(NetworkMessage.NEW_PLAYER)) {
                 System.out.println(message.getType() + " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
@@ -39,10 +43,39 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
             }
 
             //SEND CHAT MESSAGE
+            //SEND CHAT MESSAGE
+            //SEND CHAT MESSAGE
             if (message.getType().equals(NetworkMessage.SEND_CHAT_MESSAGE)) {
                 System.out.println(message.getType()+ " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
                 Platform.runLater(() -> GameAttributes.setLobbyChat(message.getMessage()));
+            }
+
+            //START GAME
+            //START GAME
+            //START GAME
+            if (message.getType().equals(NetworkMessage.START_GAME)) {
+                System.out.println(message.getType()+ " received from server");
+                Platform.runLater(() -> {
+                    GameAttributes.setPlayers(message.getPlayers());
+                    GameAttributes.setAlivePlayers(message.getAlivePlayers());
+                    GameAttributes.setNowMovingPlayerName(message.getNowMovingPlayerName());
+                    Main.showTableTop();
+                });
+            }
+
+            //GET CARD FROM DECK
+            //GET CARD FROM DECK
+            //GET CARD FROM DECK
+            if (message.getType().equals(NetworkMessage.GET_CARD_FROM_DECK)) {
+                System.out.println(message.getType()+ " received from server");
+
+                if (message.getCard().getType().equals(Card.CARD_TYPE_EVENT)) {
+                    GameAttributes.getPlayer().getHandCards().add(message.getCard());
+                } else {
+                    GameAttributes.setNowPlayingCard(message.getCard());
+                    TabletopController.drawNowPlayingCard();
+                }
             }
         }
     }
