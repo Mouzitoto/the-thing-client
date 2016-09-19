@@ -25,7 +25,7 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
 
             //NEW PLAYER
             if (message.getType().equals(NetworkMessage.NEW_PLAYER)) {
-                System.out.println(NetworkMessage.NEW_PLAYER + " received from server");
+                System.out.println(message.getType() + " received from server");
                 //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
                 Platform.runLater(() -> {
                     GameAttributes.setPlayers(message.getPlayers());
@@ -35,12 +35,14 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
                         if (player.getName().equals(GameAttributes.getPlayer().getName()))
                             GameAttributes.setPlayer(player);
                     }
-//                    try {
-//                        Main.showSceneFromFXML(Main.LOBBY_FXML);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                 });
+            }
+
+            //SEND CHAT MESSAGE
+            if (message.getType().equals(NetworkMessage.SEND_CHAT_MESSAGE)) {
+                System.out.println(message.getType()+ " received from server");
+                //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
+                Platform.runLater(() -> GameAttributes.setLobbyChat(message.getMessage()));
             }
         }
     }
