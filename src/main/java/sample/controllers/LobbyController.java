@@ -51,7 +51,7 @@ public class LobbyController {
     }
 
     @FXML
-    public void startGame() throws IOException {
+    public void startGame() throws IOException, InterruptedException {
         NetworkClient.sendMessage(NetworkMessage.START_GAME);
     }
 

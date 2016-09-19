@@ -193,7 +193,11 @@ public class TabletopController {
             @Override
             public void handle(MouseEvent event) {
                 if (GameAttributes.getPlayer().getName().equals(GameAttributes.getNowMovingPlayerName())) {
-                    NetworkClient.sendMessage(NetworkMessage.GET_CARD_FROM_DECK);
+                    try {
+                        NetworkClient.sendMessage(NetworkMessage.GET_CARD_FROM_DECK);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

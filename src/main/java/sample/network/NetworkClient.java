@@ -22,7 +22,7 @@ public class NetworkClient {
     private static final int TCP_PORT = 27015;
     private static final boolean SSL = System.getProperty("ssl") != null;
     private static Channel channel;
-    private static ChannelFuture channelFuture;
+    private static ChannelFuture channelFuture = null;
     private static EventLoopGroup group = new NioEventLoopGroup();
 
     public static void sendChatMessage(String chatMessage) {
@@ -31,14 +31,15 @@ public class NetworkClient {
         message.setMessage(chatMessage);
         message.setPlayer(GameAttributes.getPlayer());
 
-//        client.sendTCP(message);
+        channelFuture = channel.writeAndFlush(message);
     }
 
-    public static void sendMessage(String type) {
+    public static void sendMessage(String type) throws InterruptedException {
         NetworkMessage message = new NetworkMessage();
         message.setType(type);
         message.setPlayer(GameAttributes.getPlayer());
-//        client.sendTCP(message);
+
+        channelFuture = channel.writeAndFlush(message);
     }
 
     public static NetworkClient start(final String hostIP) throws SSLException, InterruptedException {

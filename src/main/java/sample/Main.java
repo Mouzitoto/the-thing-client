@@ -55,10 +55,12 @@ public class Main extends Application {
     }
 
     public static void connectToServer(String hostIP, String playerName) throws IOException, InterruptedException {
-        client = NetworkClient.start(hostIP);
+        NetworkClient.start(hostIP);
 
         GameAttributes.getPlayer().setName(playerName);
 
-        client.sendMessage(NetworkMessage.HANDSHAKE);
+        NetworkClient.sendMessage(NetworkMessage.HANDSHAKE);
+
+        Main.showSceneFromFXML(Main.LOBBY_FXML);
     }
 }

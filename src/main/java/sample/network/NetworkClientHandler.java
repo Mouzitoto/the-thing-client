@@ -2,27 +2,47 @@ package sample.network;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import javafx.application.Platform;
+import sample.Main;
+import sample.game.GameAttributes;
+import sample.game.Player;
+
+import java.io.IOException;
 
 public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
 
-    NetworkMessage networkMessage = new NetworkMessage();
-
     public NetworkClientHandler() {
-        networkMessage.setType(NetworkMessage.HANDSHAKE);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        // Send the first message if this handler is a client-side handler.
-        ctx.writeAndFlush(networkMessage);
-        System.out.println("msg was sent to server");
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println("msg received from server");
-        NetworkMessage networkMessage = (NetworkMessage) msg;
-        System.out.println(networkMessage.getType());
+        if (msg instanceof NetworkMessage) {
+            final NetworkMessage message = (NetworkMessage) msg;
+
+            //NEW PLAYER
+            if (message.getType().equals(NetworkMessage.NEW_PLAYER)) {
+                System.out.println(NetworkMessage.NEW_PLAYER + " received from server");
+                //if we need to modify smth from not-this-application-thread (for example another client) - we need to use runLater()
+                Platform.runLater(() -> {
+                    GameAttributes.setPlayers(message.getPlayers());
+                    GameAttributes.setPlayersNames();
+                    for (Player player : message.getPlayers()) {
+                        //TODO: change this to ID from database in future
+                        if (player.getName().equals(GameAttributes.getPlayer().getName()))
+                            GameAttributes.setPlayer(player);
+                    }
+//                    try {
+//                        Main.showSceneFromFXML(Main.LOBBY_FXML);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                });
+            }
+        }
     }
 
     @Override

@@ -4,19 +4,21 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ruslan.babich on 26.07.2016.
  */
-public class Player {
+public class Player implements Serializable {
     private String name;
     private boolean isGameOwner;
     private Point2D tabletopPosition;
     private List<Card> handCards = new ArrayList<Card>();
 
-    public Player() {}
+    public Player() {
+    }
 
     public Player(String name) {
         this.name = name;
