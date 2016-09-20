@@ -59,7 +59,9 @@ public class Main extends Application {
 
         GameAttributes.getPlayer().setName(playerName);
 
-        NetworkClient.sendMessage(NetworkMessage.HANDSHAKE);
+        NetworkMessage message = new NetworkMessage();
+        message.setType(NetworkMessage.HANDSHAKE);
+        NetworkClient.sendMessage(message);
 
         Main.showSceneFromFXML(Main.LOBBY_FXML);
     }

@@ -1,31 +1,23 @@
 package sample.controllers;
 
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import sample.game.Card;
-import sample.game.CardImageView;
-import sample.game.GameAttributes;
+import sample.game.*;
 import sample.Main;
-import sample.game.Player;
-import sample.network.ClientListener;
 import sample.network.NetworkClient;
 import sample.network.NetworkMessage;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ruslan.babich on 08.08.2016.
@@ -36,6 +28,9 @@ public class TabletopController {
     private static Pane rootPane;
     private static double rootCenterX;
     private static double rootCenterY;
+    private static List<CardImageView> playerHandCards = new ArrayList<>();
+    private static List<ImageView> otherPlayersHandCards = new ArrayList<>();
+    private static CardImageView ivNowPlayingCard;
 
     private static final int CARD_WIDTH = 80;
     private static final int CARD_HEIGHT = 100;
@@ -49,7 +44,7 @@ public class TabletopController {
         rootCenterX = rootPane.getWidth() / 2;
         rootCenterY = rootPane.getHeight() / 2;
 
-        if (GameAttributes.getAlivePlayers() == null) {
+        if (GameAttributes.getPlayers() == null) {
             System.out.println("omg");
         }
 
@@ -63,19 +58,24 @@ public class TabletopController {
         drawDeckAndDroppingDeck();
         drawMoveDirectionArrow(GameAttributes.getMoveDirection());
         drawNowMovingPlayerName();
-        drawPlayersStuff();
+        drawPlayerNames();
 
     }
 
     public static void drawNowPlayingCard() {
-        CardImageView ivNowPlayingCard = new CardImageView();
+        //delete if exist
+        if (ivNowPlayingCard != null)
+            rootPane.getChildren().remove(ivNowPlayingCard);
+
+        //draw new
+        ivNowPlayingCard = new CardImageView();
         ivNowPlayingCard.setLayoutX(rootCenterX - CARD_WIDTH / 2);
         ivNowPlayingCard.setLayoutY(rootCenterY - CARD_HEIGHT / 2);
         ivNowPlayingCard.setFitWidth(CARD_WIDTH);
         ivNowPlayingCard.setFitHeight(CARD_HEIGHT);
 
         Card nowPlayingCard = GameAttributes.getNowPlayingCard();
-        Image imgNowPlayingCard = new Image(Main.class.getClassLoader().getResourceAsStream(nowPlayingCard.getAction().name() + ".png"));
+        Image imgNowPlayingCard = new Image(Main.class.getClassLoader().getResourceAsStream("cards/" + nowPlayingCard.getType() + "/" + nowPlayingCard.getAction().name() + ".png"));
 
         ivNowPlayingCard.setImage(imgNowPlayingCard);
 
@@ -115,35 +115,58 @@ public class TabletopController {
     }
 
     public static void calculatePlayersPositions() {
-        double angle = 360 / GameAttributes.getAlivePlayers().size();
+        double angle = 360 / GameAttributes.getPlayers().size();
 
-        for (int i = 0; i < GameAttributes.getAlivePlayers().size(); i++) {
+        for (int i = 0; i < GameAttributes.getPlayers().size(); i++) {
             Line line = new Line(rootCenterX, rootCenterY + 300, rootCenterX, rootCenterY - 300);
             line.setRotate(angle * i);
 
-            Point2D point = line.localToParent(rootCenterX, rootCenterY + 300);
-            GameAttributes.getAlivePlayers().get(i).setTabletopPosition(point);
+            GamePoint2D gamePoint2D = new GamePoint2D(line.localToParent(rootCenterX, rootCenterY + 300));
+            GameAttributes.getPlayers().get(i).setTabletopPosition(gamePoint2D);
 
-            if (GameAttributes.getAlivePlayers().get(i).getName().equals(GameAttributes.getPlayer().getName()))
-                GameAttributes.getPlayer().setTabletopPosition(point);
+            if (GameAttributes.getPlayers().get(i).getName().equals(GameAttributes.getPlayer().getName()))
+                GameAttributes.getPlayer().setTabletopPosition(gamePoint2D);
+        }
+
+        try {
+            NetworkMessage message = new NetworkMessage();
+            message.setType(NetworkMessage.NEW_PLAYER_POSITIONS);
+            message.setPlayers(GameAttributes.getPlayers());
+            NetworkClient.sendMessage(message);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public static void drawPlayersStuff() {
-        for (Player player : GameAttributes.getAlivePlayers()) {
+    public static void drawPlayerNames() {
+        for (Player player : GameAttributes.getPlayers()) {
             //draw player name
             Label lblPlayerName = new Label(player.getName());
-
             lblPlayerName.setLayoutX(player.getTabletopPosition().getX() - (lblPlayerName.getText().length() * 10) / 2);
             lblPlayerName.setLayoutY(player.getTabletopPosition().getY() - 30);
-            //todo: change this to ID from DB later
-            if (player.getName() == GameAttributes.getPlayer().getName())
+            if (player.getName().equals(GameAttributes.getPlayer().getName()))
                 lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 16));
             rootPane.getChildren().add(lblPlayerName);
 
-            //draw otherPlayers hand (cover)
+
+
+        }
+
+//        drawOtherPlayersHandCards();
+
+        //draw player hand
+//        drawPlayerHandCards();
+    }
+
+    public static void drawOtherPlayersHandCards () {
+        //remove current cards if they r exist
+        for (ImageView iv : otherPlayersHandCards)
+            rootPane.getChildren().remove(iv);
+
+        //draw new cards
+        for (Player player : GameAttributes.getPlayers()) {
             if (!player.getName().equals(GameAttributes.getPlayer().getName())) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < player.getHandCardsCount(); i++) {
                     ImageView imageView = new ImageView();
                     imageView.setLayoutX(player.getTabletopPosition().getX() - 190 + i * CARD_WIDTH + i * CARD_SEPARATOR);
                     imageView.setLayoutY(player.getTabletopPosition().getY());
@@ -154,13 +177,20 @@ public class TabletopController {
 
                     imageView.setImage(img);
 
+                    otherPlayersHandCards.add(imageView); //need for future deleting
+
                     rootPane.getChildren().add(imageView);
                 }
             }
         }
+    }
 
+    public static void drawPlayerHandCards() {
+        //delete current player hand cards if they r exist
+        for (CardImageView civ : playerHandCards)
+            rootPane.getChildren().remove(civ);
 
-        //draw player hand
+        //draw new player hand cards
         for (int i = 0; i < GameAttributes.getPlayer().getHandCards().size(); i++) {
             Card card = GameAttributes.getPlayer().getHandCards().get(i);
             CardImageView imageView = new CardImageView();
@@ -173,6 +203,8 @@ public class TabletopController {
             Image img = new Image(Main.class.getClassLoader().getResourceAsStream("cards/" + card.getType() + "/" + card.getAction().name() + ".png"));
 
             imageView.setImage(img);
+
+            playerHandCards.add(imageView); //we need that for future deleting from tabletop
 
             rootPane.getChildren().add(imageView);
         }
@@ -189,36 +221,21 @@ public class TabletopController {
         Image imgDeck = new Image(Main.class.getClassLoader().getResourceAsStream("cards/panic/cover.png"));
         ivDeck.setImage(imgDeck);
 
-        ivDeck.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (GameAttributes.getPlayer().getName().equals(GameAttributes.getNowMovingPlayerName())) {
-                    try {
-                        NetworkClient.sendMessage(NetworkMessage.GET_CARD_FROM_DECK);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        Button btn = new Button();
-        btn.setText("omg");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        ivDeck.setOnMouseClicked(event -> {
+            if (GameAttributes.getPlayer().getName().equals(GameAttributes.getNowMovingPlayerName())) {
                 try {
-                    Main.showSceneFromFXML(Main.LOBBY_FXML);
-                } catch (IOException e) {
+                    NetworkMessage message = new NetworkMessage();
+                    message.setType(NetworkMessage.GET_CARD_FROM_DECK);
+                    NetworkClient.sendMessage(message);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        rootPane.getChildren().add(btn);
 
         Label lblDeck = new Label("Колода");
-        lblDeck.setLayoutX(40 + CARD_WIDTH/2 - CARD_SEPARATOR);
+        lblDeck.setLayoutX(40 + CARD_WIDTH / 2 - CARD_SEPARATOR);
         lblDeck.setLayoutY(20);
 
         rootPane.getChildren().add(ivDeck);
@@ -235,7 +252,7 @@ public class TabletopController {
         ivDroppingDeck.setImage(imgDroppingDeck);
 
         Label lblDroppingDeck = new Label("Сброс");
-        lblDroppingDeck.setLayoutX(40 + CARD_WIDTH/2 - CARD_SEPARATOR + CARD_WIDTH + CARD_SEPARATOR);
+        lblDroppingDeck.setLayoutX(40 + CARD_WIDTH / 2 - CARD_SEPARATOR + CARD_WIDTH + CARD_SEPARATOR);
         lblDroppingDeck.setLayoutY(20);
 
         rootPane.getChildren().add(ivDroppingDeck);

@@ -14,7 +14,8 @@ import java.util.List;
 public class Player implements Serializable {
     private String name;
     private boolean isGameOwner;
-    private Point2D tabletopPosition;
+    private GamePoint2D tabletopPosition;
+    private int handCardsCount = 0;
     private List<Card> handCards = new ArrayList<Card>();
 
     public Player() {
@@ -36,11 +37,11 @@ public class Player implements Serializable {
         this.handCards = handCards;
     }
 
-    public Point2D getTabletopPosition() {
+    public GamePoint2D getTabletopPosition() {
         return tabletopPosition;
     }
 
-    public void setTabletopPosition(Point2D tabletopPosition) {
+    public void setTabletopPosition(GamePoint2D tabletopPosition) {
         this.tabletopPosition = tabletopPosition;
     }
 
@@ -58,5 +59,13 @@ public class Player implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getHandCardsCount() {
+        return handCardsCount;
+    }
+
+    public void setHandCardsCount(int handCardsCount) {
+        this.handCardsCount = handCardsCount;
     }
 }

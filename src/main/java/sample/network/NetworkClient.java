@@ -34,12 +34,12 @@ public class NetworkClient {
         channelFuture = channel.writeAndFlush(message);
     }
 
-    public static void sendMessage(String type) throws InterruptedException {
-        NetworkMessage message = new NetworkMessage();
-        message.setType(type);
+    public static void sendMessage(NetworkMessage message) throws InterruptedException {
         message.setPlayer(GameAttributes.getPlayer());
 
         channelFuture = channel.writeAndFlush(message);
+        channelFuture.sync();
+        System.out.println("'" + message.getType() + "' was sent to server");
     }
 
     public static NetworkClient start(final String hostIP) throws SSLException, InterruptedException {
@@ -69,7 +69,13 @@ public class NetworkClient {
                 });
 
         // Start the connection attempt.
-        channel = b.connect(hostIP, TCP_PORT).sync().channel();
+//        channel = b.connect(hostIP, TCP_PORT).sync().channel();
+
+        channelFuture = b.connect(hostIP, TCP_PORT);
+
+        channel = channelFuture.channel();
+
+        channelFuture.sync();
 
         return null;
     }

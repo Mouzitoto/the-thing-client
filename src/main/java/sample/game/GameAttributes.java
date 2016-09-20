@@ -17,7 +17,6 @@ public class GameAttributes {
     private static SimpleBooleanProperty isGameOwner = new SimpleBooleanProperty(Player.class, "isGameOwner");
     private static Player player = new Player();
     private static List<Player> players = new ArrayList<>();
-    private static List<Player> alivePlayers = new ArrayList<>();
     private static int moveDirection = 1;
     private static SimpleStringProperty nowMovingPlayerName = new SimpleStringProperty(GameAttributes.class, "nowMovingPlayerName");
     private static Card nowPlayingCard;
@@ -69,14 +68,6 @@ public class GameAttributes {
 
     public static void setPlayers(List<Player> players) {
         GameAttributes.players = players;
-    }
-
-    public static List<Player> getAlivePlayers() {
-        return alivePlayers;
-    }
-
-    public static void setAlivePlayers(List<Player> alivePlayers) {
-        GameAttributes.alivePlayers = alivePlayers;
     }
 
     public static String getPlayersNames() {

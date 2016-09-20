@@ -58,7 +58,7 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
                 System.out.println(message.getType()+ " received from server");
                 Platform.runLater(() -> {
                     GameAttributes.setPlayers(message.getPlayers());
-                    GameAttributes.setAlivePlayers(message.getAlivePlayers());
+                    GameAttributes.setPlayers(message.getPlayers());
                     GameAttributes.setNowMovingPlayerName(message.getNowMovingPlayerName());
                     Main.showTableTop();
                 });
@@ -70,12 +70,40 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
             if (message.getType().equals(NetworkMessage.GET_CARD_FROM_DECK)) {
                 System.out.println(message.getType()+ " received from server");
 
-                if (message.getCard().getType().equals(Card.CARD_TYPE_EVENT)) {
-                    GameAttributes.getPlayer().getHandCards().add(message.getCard());
-                } else {
+                Platform.runLater(() -> {
+                    if (message.getCard().getType().equals(Card.CARD_TYPE_EVENT)) {
+                        GameAttributes.getPlayer().getHandCards().add(message.getCard());
+                        GameAttributes.getPlayer().setHandCardsCount(message.getPlayer().getHandCardsCount());
+                        TabletopController.drawPlayerHandCards();
+                    } else {
+                        GameAttributes.setNowPlayingCard(message.getCard());
+                        TabletopController.drawNowPlayingCard();
+                    }
+                });
+            }
+
+            //OTHER PLAYER GET EVENT CARD FROM DECK
+            //OTHER PLAYER GET EVENT CARD FROM DECK
+            //OTHER PLAYER GET EVENT CARD FROM DECK
+            if (message.getType().equals(NetworkMessage.OTHER_PLAYER_GET_EVENT_CARD_FROM_DECK)) {
+                System.out.println(message.getType()+ " received from server");
+
+                Platform.runLater(() -> {
+                        GameAttributes.setPlayers(message.getPlayers());
+                        TabletopController.drawOtherPlayersHandCards();
+                });
+            }
+
+            //OTHER PLAYER GET PANIC CARD FROM DECK
+            //OTHER PLAYER GET PANIC CARD FROM DECK
+            //OTHER PLAYER GET PANIC CARD FROM DECK
+            if (message.getType().equals(NetworkMessage.OTHER_PLAYER_GET_PANIC_CARD_FROM_DECK)) {
+                System.out.println(message.getType()+ " received from server");
+
+                Platform.runLater(() -> {
                     GameAttributes.setNowPlayingCard(message.getCard());
                     TabletopController.drawNowPlayingCard();
-                }
+                });
             }
         }
     }

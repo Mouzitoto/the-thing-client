@@ -17,6 +17,9 @@ public class NetworkMessage implements Serializable{
     public static final String START_GAME = "startGame";
     public static final String PLAYER_QUIT = "playerQuit";
     public static final String GET_CARD_FROM_DECK = "getCardFromDeck";
+    public static final String OTHER_PLAYER_GET_EVENT_CARD_FROM_DECK = "otherPlayerGetEventCardFromDeck";
+    public static final String OTHER_PLAYER_GET_PANIC_CARD_FROM_DECK = "otherPlayerGetPanicCardFromDeck";
+    public static final String NEW_PLAYER_POSITIONS = "newPlayerPositions";
 
 
     private String type;
@@ -24,8 +27,17 @@ public class NetworkMessage implements Serializable{
     private Player player;
     private String nowMovingPlayerName;
     private List<Player> players;
-    private List<Player> alivePlayers;
     private Card card;
+    //todo: dont forget to add new attribute to clear() method
+
+    public void clear() {
+        this.type = null;
+        this.message = null;
+        this.player = null;
+        this.nowMovingPlayerName = null;
+        this.players = null;
+        this.card = null;
+    }
 
 
     //GETTERS AND SETTERS
@@ -37,14 +49,6 @@ public class NetworkMessage implements Serializable{
 
     public void setNowMovingPlayerName(String nowMovingPlayerName) {
         this.nowMovingPlayerName = nowMovingPlayerName;
-    }
-
-    public List<Player> getAlivePlayers() {
-        return alivePlayers;
-    }
-
-    public void setAlivePlayers(List<Player> alivePlayers) {
-        this.alivePlayers = alivePlayers;
     }
 
     public Card getCard() {
