@@ -147,18 +147,10 @@ public class TabletopController {
             if (player.getName().equals(GameAttributes.getPlayer().getName()))
                 lblPlayerName.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 16));
             rootPane.getChildren().add(lblPlayerName);
-
-
-
         }
-
-//        drawOtherPlayersHandCards();
-
-        //draw player hand
-//        drawPlayerHandCards();
     }
 
-    public static void drawOtherPlayersHandCards () {
+    public static void drawOtherPlayersHandCards() {
         //remove current cards if they r exist
         for (ImageView iv : otherPlayersHandCards)
             rootPane.getChildren().remove(iv);
@@ -222,14 +214,12 @@ public class TabletopController {
         ivDeck.setImage(imgDeck);
 
         ivDeck.setOnMouseClicked(event -> {
-            if (GameAttributes.getPlayer().getName().equals(GameAttributes.getNowMovingPlayerName())) {
-                try {
-                    NetworkMessage message = new NetworkMessage();
-                    message.setType(NetworkMessage.GET_CARD_FROM_DECK);
-                    NetworkClient.sendMessage(message);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                NetworkMessage message = new NetworkMessage();
+                message.setType(NetworkMessage.GET_CARD_FROM_DECK);
+                NetworkClient.sendMessage(message);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
 
