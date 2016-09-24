@@ -65,4 +65,13 @@ public class Main extends Application {
 
         Main.showSceneFromFXML(Main.LOBBY_FXML);
     }
+
+    @Override
+    public void stop() throws InterruptedException {
+        NetworkMessage message = new NetworkMessage();
+        message.setType(NetworkMessage.PLAYER_QUIT);
+        NetworkClient.sendMessage(message);
+
+        NetworkClient.stop();
+    }
 }

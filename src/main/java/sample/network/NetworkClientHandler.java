@@ -42,6 +42,20 @@ public class NetworkClientHandler extends ChannelInboundHandlerAdapter {
                 });
             }
 
+            //PLAYER QUIT
+            //PLAYER QUIT
+            //PLAYER QUIT
+            if (message.getType().equals(NetworkMessage.PLAYER_QUIT)) {
+                System.out.println(NetworkMessage.PLAYER_QUIT + " received from server");
+                GameAttributes.setPlayers(message.getPlayers());
+                //todo: if currentScene = lobby, then setPlayerNames else - redraw tabletop
+                GameAttributes.setPlayersNames();
+                for (Player player : message.getPlayers()) {
+                    if (player.getName().equals(GameAttributes.getPlayer().getName()))
+                        GameAttributes.setPlayer(player);
+                }
+            }
+
             //SEND CHAT MESSAGE
             //SEND CHAT MESSAGE
             //SEND CHAT MESSAGE
